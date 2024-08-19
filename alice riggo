@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Sierpiński triangle teste</title>
+  </head>
+  <body>
+    <h1>Alice Riggo</h1>
+    <canvas id="area" width="600" height="600"></canvas>
+    <script type="text/javascript">
+
+      // Sierpiński_triangle:
+      //
+      // Is a fractal and attractive fixed set with the overall shape
+      // of an equilateral triangle, subdivided recursively into smallers
+      // equilateral triangles.
+      //
+      // Details: https://en.wikipedia.org/wiki/Sierpiński_triangle
+      //
+      // by Dmitry Soshnikov <dmitry.soshnikov@gmail.com>
+      // MIT Style License, 2019
+
+
+      const canvas = document.getElementById('area');
+      const ctx = canvas.getContext('2d');
+
+      // Main triangle.
+      const T = [[299, 0], [0, 599], [599, 599]];
+
+      // Start point.
+      let current = [299, 299];
+
+      function midPoint([x1, y1], [x2, y2]) {
+        return [(x1 + x2) / 2, (y1 + y2) / 2];
+      }
+
+      function putPixel(x, y, color) {
+        ctx.fillStyle = color;
+        ctx.fillRect(x, y, 1, 1);
+      }
+
+      function randomInRange(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+
+      function randomColor() {
+        return '#' + Math.floor(Math.random() * 0xffffff).toString(16);
+      }
+
+      // Max steps.
+      const maxSteps = 500000;
+
+      function step(color) {
+        const to = randomInRange(0, 2);
+        current = midPoint(current, T[to]);
+        putPixel(...current, color);
+      }
+
+      function run() {
+        const color = randomColor();
+        ctx.clearRect(0, 0, 600, 600);
+        for (let i = 0; i < maxSteps; i++) {
+          step(color);
+        }
+      }
+
+      // Setup main triangle.
+      putPixel(...T[0], '#f00');
+      putPixel(...T[1], '#0f0');
+      putPixel(...T[2], '#00f');
+
+      // Go.
+      run();
+
+      // Refresh every second.
+      setInterval(run, 1000);
+    </script>
+  </body>
+</html>
